@@ -1,0 +1,78 @@
+name: urlshortener
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: urlshortener
+      POSTGRES_USER: urlshortener
+      POSTGRES_PASSWORD: urlshortener
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U urlshortener -d urlshortener"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app1: &app
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: urlshortener
+      DB_USER: urlshortener
+      DB_PASSWORD: urlshortener
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health/readiness || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  app2:
+    <<: *app
+
+  lb:
+    image: nginx:1.27-alpine
+    depends_on:
+      app1:
+        condition: service_healthy
+      app2:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  # Optional broker stub — not started by default
+  # Level 4: externalize events → wire app1/app2 to rabbit via Spring AMQP or Cloud Stream
+  rabbit:
+    profiles: ["broker"]
+    image: rabbitmq:3.13-management-alpine
+    ports:
+      - "5672:5672"      # AMQP
+      - "15672:15672"    # management UI
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Load runner — same Compose project / network; NOT started by default `up`
+  k6:
+    profiles: ["load"]
+    image: grafana/k6:0.54.0
+    depends_on:
+      - lb
+    volumes:
+      - ./scripts:/scripts:ro
+    environment:
+      BASE_URL: http://lb
+    command: ["run", "/scripts/load.k6.js"]
+
+volumes:
+  pgdata:

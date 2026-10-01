@@ -1,0 +1,28 @@
+# TEAM.md — local only, do not commit
+
+This file is listed in `.gitignore`. Copy it to `TEAM.md`, fill in the real values, and keep it on your machine only. It must never be pushed to the repository.
+
+It is the only place personal information about the team is recorded.
+
+---
+
+## Members
+
+| Personal name | UNIZAR email (`…@unizar.es`) | git `user.name` | GitHub id | Owned features | Integrator |
+| --- | --- | --- | --- | --- | --- |
+| Surname, Given | xxxxxx@unizar.es | Surname Given | @github-id | docs/features/0004-….md | no |
+| Surname, Given | xxxxxx@unizar.es | Surname Given | @github-id | docs/features/0005-….md | **yes** |
+| Surname, Given | xxxxxx@unizar.es | Surname Given | @github-id | docs/features/0006-….md | no |
+| Surname, Given | xxxxxx@unizar.es | Surname Given | @github-id | docs/features/0007-….md | no |
+
+---
+
+## Notes
+
+- **UNIZAR email** (`…@unizar.es`) must be set as `user.email` in git for commits in this repo:
+  ```bash
+  git config user.email xxxxxx@unizar.es
+  git config user.name "Surname Given"
+  ```
+- Exactly **one** member is the integrator (responsible for CI, `docker compose up`, and the cross-module event path at defence).
+- **Owned features** are the cards each member owns.
