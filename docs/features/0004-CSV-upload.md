@@ -1,21 +1,21 @@
-# Feature: \<name\>
+# Feature: CSV Upload
 
 ## Decision (required by 2 October)
 
-Paste the catalogue entry here (from the [Feature Catalogue](https://moodle.unizar.es/add/mod/resource/view.php?id=12167300)), or write one in the same shape if the idea is your own:
+**Owner module**: links | **Event-coupled**: Y (each row emits ShortUrlCreatedEvent)
 
-**Owner module**: links | clicks | analytics | \<new\> | **Event-coupled**: Y | N (\<reason\>)
+Enables batch URL shortening: users upload a CSV of URLs and receive a CSV of shortened URLs.
+Each row is processed individually; a single failure does not abort the batch. The response is a CSV with the same columns plus shortUrl and status.
 
-\<One paragraph — what the user or system gains.\>
+**Traps**: RFC 4180 edge cases [10] (quoted commas, embedded newlines); row-level vs request-level error handling. Claiming Level 3 (weight 13) requires a new event of your own; re-emitting ShortUrlCreatedEvent does not count. For Level 4, rows go through an outbox — blocking the HTTP response on that async work is wrong.
 
-**Traps**: \<what will break if done naively\>
-
-**Technology hints**: \<libraries or patterns\>
+**Technology hints**: Apache Commons CSV or OpenCSV; multipart/form-data; Spring @Async
+for Level 2; Modulith outbox for Level 4.
 
 ---
 
-- **Weight:** 5 | 8 | 13 | 21
-- **Event-coupled:** Y | N
+- **Weight:** 21
+- **Event-coupled:** Y
 
 ---
 

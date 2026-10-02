@@ -1,21 +1,20 @@
-# Feature: \<name\>
+# Feature: Idempotent Link Creation with Idempotency-Key
 
 ## Decision (required by 2 October)
 
-Paste the catalogue entry here (from the [Feature Catalogue](https://moodle.unizar.es/add/mod/resource/view.php?id=12167300)), or write one in the same shape if the idea is your own:
+**Owner module**: links | **Event-coupled**: N
 
-**Owner module**: links | clicks | analytics | \<new\> | **Event-coupled**: Y | N (\<reason\>)
+A client sending the same Idempotency-Key header multiple times always receives the same response (same hash, same Location). A shared idempotency store prevents duplicate processing on retries.
 
-\<One paragraph — what the user or system gains.\>
+**Traps**: idempotency keys stored in-process are not visible to the other replica; key TTL must exceed the client’s retry window; replay must return the original status code, not always 201.
 
-**Traps**: \<what will break if done naively\>
-
-**Technology hints**: \<libraries or patterns\>
+**Technology hints**: shared key→response store in Postgres or Redis; INSERT ... ON CONFLICT
+DO NOTHING; return cached response if key already exists.
 
 ---
 
-- **Weight:** 5 | 8 | 13 | 21
-- **Event-coupled:** Y | N
+- **Weight:** 21
+- **Event-coupled:** N
 
 ---
 
