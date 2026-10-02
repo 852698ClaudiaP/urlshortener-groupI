@@ -1,22 +1,15 @@
-# Feature: Idempotent Link Creation with Idempotency-Key
+# Feature: Live Click Stream (SSE / WebSocket)
+## Decision
+Owner module: new streaming + ADR | Event-coupled: Y
 
-## Decision (required by 2 October)
+A client connected to replica A receives click events originating from replica B in real time. Requires fan-out via an external broker — in-process events are invisible across JVMs.
 
-**Owner module**: links | **Event-coupled**: N
+Traps: Spring's SseEmitter is per-JVM; without a broker, a client on replica A never sees events from replica B; backpressure handling when clients disconnect.
 
-A client sending the same Idempotency-Key header multiple times always receives the same response (same hash, same Location). A shared idempotency store prevents duplicate processing on retries.
+Technology hints: SseEmitter or Spring WebFlux Flux<ServerSentEvent>; broker consumer -> push to all connected emitters; --profile broker.
 
-**Traps**: idempotency keys stored in-process are not visible to the other replica; key TTL must exceed the client’s retry window; replay must return the original status code, not always 201.
-
-**Technology hints**: shared key→response store in Postgres or Redis; INSERT ... ON CONFLICT
-DO NOTHING; return cached response if key already exists.
-
----
-
-- **Weight:** 21
-- **Event-coupled:** N
-
----
+* Weight: 21
+* Event-coupled: Y
 
 ## Later (after the 2 October agreement)
 
