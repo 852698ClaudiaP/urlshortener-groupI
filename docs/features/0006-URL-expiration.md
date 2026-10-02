@@ -2,7 +2,7 @@
 
 ## Decision (required by 2 October)
 
-**Owner module**: links | Event-coupled: N (self-contained in links; event coupling only needed at Level 3+ when another module must react to expiry)
+**Owner module**: links | **Event-coupled**: N (self-contained in links; event coupling only needed at Level 3+ when another module must react to expiry)
 
 Users optionally set an expiration date/time at creation. Accesses after expiry return 410 Gone via Problem Detail [1], [3]. Background sweep deletes or deactivates expired rows.
 

@@ -1,15 +1,19 @@
 # Feature: Live Click Stream (SSE / WebSocket)
 ## Decision
-Owner module: new streaming + ADR | Event-coupled: Y
+**Owner module**: new streaming + ADR | **Event-coupled**: Y
 
 A client connected to replica A receives click events originating from replica B in real time. Requires fan-out via an external broker — in-process events are invisible across JVMs.
 
-Traps: Spring's SseEmitter is per-JVM; without a broker, a client on replica A never sees events from replica B; backpressure handling when clients disconnect.
+**Traps**: Spring's SseEmitter is per-JVM; without a broker, a client on replica A never sees events from replica B; backpressure handling when clients disconnect.
 
-Technology hints: SseEmitter or Spring WebFlux Flux<ServerSentEvent>; broker consumer -> push to all connected emitters; --profile broker.
+**Technology hints**: SseEmitter or Spring WebFlux Flux<ServerSentEvent>; broker consumer -> push to all connected emitters; --profile broker.
+
+---
 
 * Weight: 21
 * Event-coupled: Y
+
+---
 
 ## Later (after the 2 October agreement)
 
