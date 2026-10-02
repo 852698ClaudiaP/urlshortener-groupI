@@ -1,21 +1,20 @@
-# Feature: \<name\>
+# Feature: Google safe browsing
 
 ## Decision (required by 2 October)
 
-Paste the catalogue entry here (from the [Feature Catalogue](https://moodle.unizar.es/add/mod/resource/view.php?id=12167300)), or write one in the same shape if the idea is your own:
+**Owner module**: links | **Event-coupled**: N (synchronous API call before storing — no cross-module event required)
 
-**Owner module**: links | clicks | analytics | \<new\> | **Event-coupled**: Y | N (\<reason\>)
+Integrates with Google Safe Browsing API v4 to block malicious URLs at creation time. Flagged URLs are rejected with 400 + RFC 9457 Problem Detail; safe results are cached to respect API rate limits.
 
-\<One paragraph — what the user or system gains.\>
+**Traps**: the external call adds latency to POST /api/link — cache aggressively; unavailability must not block URL creation; the fail-open vs fail-closed policy must be documented in an ADR.
 
-**Traps**: \<what will break if done naively\>
-
-**Technology hints**: \<libraries or patterns\>
+**Technology hints**: Google API Client Library; Spring @Cacheable with TTL; RestTemplate or
+WebClient; test with Google’s malware test URL.
 
 ---
 
-- **Weight:** 5 | 8 | 13 | 21
-- **Event-coupled:** Y | N
+- **Weight:** 8 
+- **Event-coupled:** N
 
 ---
 
