@@ -15,18 +15,21 @@ Each row below is a **grown** feature: a card copied from the Feature Catalogue,
 
 | Feature card | Owner module | Weight | Event-coupled |
 | --- | --- | --- | --- |
-| [docs/features/0004-….md](docs/features/0004-….md) | links \| clicks \| analytics \| \<new\> | — | Y/N |
-| [docs/features/0005-….md](docs/features/0005-….md) | | — | Y/N |
-| [docs/features/0006-….md](docs/features/0006-….md) | | — | Y/N |
-| [docs/features/0007-….md](docs/features/0007-….md) | | — | Y/N |
+| [docs/features/0004-CSV-upload.md](docs/features/0004-CSV-upload.md) | links | 21 | Y |
+| [docs/features/0005-google-safe-browsing.](docs/features/0005-google-safe-browsing.md) | links | 8 | N |
+| [docs/features/0006-URL-expiration.md](docs/features/0006-URL-expiration.md) | links | 13 | N |
+| [docs/features/0007-Live-Click-Stream-(SSE-WebSocket).md](docs/features/0007-Live-Click-Stream-(SSE-WebSocket).md) | new streaming + ADR | 21 | Y |
+| [docs/features/0008-URL-Analytics.md](docs/features/0008-URL-Analytics.md) | analytics | 13 | Y |
+| [docs/features/0009-URL-Accessibility-Validation.md](docs/features/0009-URL-Accessibility-Validation.md) | links | 8 | N |
+
 
 ## Budget
 
 | Rule | Value | Status |
 | --- | --- | --- |
-| Σ weights | **= 84** | — |
-| Grown features | **≥ 4** (one per member) | — |
-| Event-coupled | **≥ 2** | — |
+| Σ weights | **= 84** | 84 |
+| Grown features | **≥ 4** (one per member) | 6 |
+| Event-coupled | **≥ 2** | 3 |
 
 ## Commitment
 
