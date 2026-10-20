@@ -15,7 +15,7 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 )
 class HexagonalArchitectureTests {
     @ArchTest
-    fun `domain is framework-free`(classes: JavaClasses) {
+    fun domainIsFrameworkFree(classes: JavaClasses) {
         noClasses()
             .that()
             .resideInAPackage("..domain..")
@@ -31,7 +31,7 @@ class HexagonalArchitectureTests {
     }
 
     @ArchTest
-    fun `application does not depend on adapters`(classes: JavaClasses) {
+    fun applicationDoesNotDependOnAdapters(classes: JavaClasses) {
         noClasses()
             .that()
             .resideInAPackage("..application..")
