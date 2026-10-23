@@ -17,13 +17,16 @@ class LinkService(
 ) : CreateShortUrl,
     RedirectShortUrl {
     @Transactional
-    override fun create(url: String): CreatedShortUrl {
+    override fun create(
+        url: String,
+        expiresAt: Instant?,
+    ): CreatedShortUrl {
         val trimmed = url.trim()
         require(trimmed.isNotEmpty()) { "url must not be blank" }
         if (!validator.isValid(trimmed)) {
             throw InvalidUrlException(trimmed)
         }
-        val stored = store.insert(ShortUrl(hash = codes.next(), target = trimmed))
+        val stored = store.insert(ShortUrl(hash = codes.next(), target = trimmed, expiresAt = expiresAt))
         events.publishEvent(ShortUrlCreatedEvent(hash = stored.hash, target = stored.target))
         return CreatedShortUrl(hash = stored.hash, target = stored.target)
     }
@@ -31,6 +34,9 @@ class LinkService(
     @Transactional
     override fun redirect(hash: String): Redirection {
         val shortUrl = store.findByHash(hash).orElseThrow { LinkNotFoundException(hash) }
+        if (shortUrl.expiresAt != null && !shortUrl.expiresAt.isAfter(Instant.now())) {
+            throw ShortUrlExpiredException(hash)
+        }
         events.publishEvent(ClickLoggedEvent(hash = hash, occurredAt = Instant.now()))
         return Redirection(target = shortUrl.target)
     }

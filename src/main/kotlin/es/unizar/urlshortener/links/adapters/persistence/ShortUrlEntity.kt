@@ -13,6 +13,7 @@ class ShortUrlEntity(
     var hash: String,
     var target: String,
     var createdAt: Instant = Instant.now(),
+    var expiresAt: Instant? = null,
 )
 
 fun ShortUrl.toEntity() =
@@ -20,6 +21,7 @@ fun ShortUrl.toEntity() =
         hash = hash,
         target = target,
         createdAt = createdAt,
+        expiresAt = expiresAt,
     )
 
 fun ShortUrlEntity.toDomain() =
@@ -27,4 +29,5 @@ fun ShortUrlEntity.toDomain() =
         hash = hash,
         target = target,
         createdAt = createdAt,
+        expiresAt = expiresAt,
     )
