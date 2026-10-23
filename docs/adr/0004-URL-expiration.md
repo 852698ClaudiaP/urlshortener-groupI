@@ -23,6 +23,7 @@ Negative: Expired records remain in the database because no background cleanup i
 ## Alternatives considered
 
 | Option | Why rejected |
+| --- | --- |
 | Mandatory expiration parameter | Less flexibility and would interfere with current functionality |
 
 
