@@ -3,6 +3,7 @@ package es.unizar.urlshortener.links.application
 import es.unizar.urlshortener.links.domain.ShortUrl
 import org.jmolecules.architecture.hexagonal.PrimaryPort
 import org.jmolecules.architecture.hexagonal.SecondaryPort
+import java.time.Instant
 import java.util.Optional
 
 @SecondaryPort
@@ -39,9 +40,18 @@ class LinkNotFoundException(
     hash: String,
 ) : RuntimeException("[$hash] is not known")
 
+class ShortUrlExpiredException(
+    hash: String,
+) : RuntimeException("[$hash] is expired")
+
 @PrimaryPort
 fun interface CreateShortUrl {
-    fun create(url: String): CreatedShortUrl
+    fun create(
+        url: String,
+        expiresAt: Instant?,
+    ): CreatedShortUrl
+
+    fun create(url: String): CreatedShortUrl = create(url, null)
 }
 
 @PrimaryPort
