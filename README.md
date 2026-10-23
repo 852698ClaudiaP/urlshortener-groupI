@@ -48,6 +48,30 @@ Day-to-day coding uses `./gradlew bootRun` (in-memory HSQLDB). Demo and grading 
 ./gradlew ktlintFormat    # Auto-fix style issues
 ```
 
+### Running the Tests and Proof of Concept
+
+```bash
+# Run all quality gates (ktlint, detekt, tests, JaCoCo coverage >= 60%)
+./gradlew check
+
+# Run all tests
+./gradlew test
+
+# Run the Proof of Concept test (Feature 0007: Live Click Stream)
+./gradlew test --tests "es.unizar.urlshortener.streaming.LiveClickStreamTests"
+```
+
+### Running the Product (Docker Compose)
+
+```bash
+# Build and launch Postgres + 2 app replicas + Nginx Load Balancer
+docker compose up --build
+
+# The application is available at http://localhost:8080
+# Connect to the live click stream via SSE:
+curl -N http://localhost:8080/api/streaming/clicks
+```
+
 ## Quality gates (CI enforced)
 
 | Gate | Tool | Threshold |
