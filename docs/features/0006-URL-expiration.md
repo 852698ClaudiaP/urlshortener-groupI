@@ -19,7 +19,7 @@ Users optionally set an expiration date/time at creation. Accesses after expiry 
 
 ## Later (after the 2 October agreement)
 
-- **ADR:** none | docs/adr/NNNN-….md *(by when a choice locks a module, the broker, or a library)*
+- **ADR:** [`0004-URL-expiration.md`](../adr/0004-URL-expiration.md)
 
 ### Acceptance criteria
 

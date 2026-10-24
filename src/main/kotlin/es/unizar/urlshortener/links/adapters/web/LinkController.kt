@@ -3,7 +3,9 @@ package es.unizar.urlshortener.links.adapters.web
 import es.unizar.urlshortener.links.application.CreateShortUrl
 import es.unizar.urlshortener.links.application.InvalidUrlException
 import es.unizar.urlshortener.links.application.LinkNotFoundException
+import es.unizar.urlshortener.links.application.ShortUrlExpiredException
 import es.unizar.urlshortener.links.application.RedirectShortUrl
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -14,12 +16,15 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.servlet.resource.ResourceUrlProviderExposingInterceptor
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
+import java.time.Instant
 
 data class ShortUrlResponse(
     val url: String,
     val hash: String,
+    val expiresAt: Instant?,
 )
 
 @RestController
@@ -34,8 +39,11 @@ class LinkController(
     )
     fun create(
         @RequestParam url: String,
+        @RequestParam(required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        expiresAt: Instant?,
     ): ResponseEntity<ShortUrlResponse> {
-        val created = createShortUrl.create(url)
+        val created = createShortUrl.create(url, expiresAt)
         val location =
             ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -43,7 +51,7 @@ class LinkController(
                 .buildAndExpand(created.hash)
                 .toUri()
         return ResponseEntity.created(location).body(
-            ShortUrlResponse(url = location.toString(), hash = created.hash),
+            ShortUrlResponse(url = location.toString(), hash = created.hash, expiresAt = expiresAt),
         )
     }
 
@@ -64,4 +72,8 @@ class LinkController(
     @ExceptionHandler(LinkNotFoundException::class)
     fun notFound(ex: LinkNotFoundException): ResponseEntity<Map<String, String>> =
         ResponseEntity.status(HttpStatus.NOT_FOUND).body(mapOf("error" to (ex.message ?: "not found")))
+        
+    @ExceptionHandler(ShortUrlExpiredException::class)
+    fun urlEpired(ex: ShortUrlExpiredException): ResponseEntity<Map<String, String>> =
+        ResponseEntity.status(HttpStatus.GONE).body(mapOf("error" to (ex.message ?: "url expired")))
 }
