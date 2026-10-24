@@ -17,7 +17,7 @@ A client connected to replica A receives click events originating from replica B
 
 ## Later (after the 2 October agreement)
 
-- **ADR:** [docs/adr/0004-live-click-stream-poc.md](../adr/0004-live-click-stream-poc.md)
+- **ADR:** [docs/adr/0005-live-click-stream-poc.md](../adr/0005-live-click-stream-poc.md)
 
 ### Acceptance criteria
 

@@ -2,12 +2,16 @@ package es.unizar.urlshortener.links
 
 import es.unizar.urlshortener.links.adapters.persistence.Base62
 import es.unizar.urlshortener.links.application.CreateShortUrl
+import es.unizar.urlshortener.links.application.RedirectShortUrl
+import es.unizar.urlshortener.links.application.ShortUrlExpiredException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.Instant
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -17,6 +21,9 @@ import java.util.concurrent.TimeUnit
 class CreateShortUrlConcurrencyTests {
     @Autowired
     lateinit var createShortUrl: CreateShortUrl
+
+    @Autowired
+    lateinit var redirectShortUrl: RedirectShortUrl
 
     @Test
     fun `each create mints a new code of at least the minimum length`() {
@@ -34,6 +41,23 @@ class CreateShortUrlConcurrencyTests {
         val results = runConcurrently(CREATES) { createShortUrl.create(url).hash }
         assertEquals(CREATES, results.toSet().size)
         assertTrue(results.all { it.length >= Base62.MIN_CODE_LENGTH })
+    }
+
+    @Test
+    fun `expired short URL cannot be redirected`() {
+        val created = createShortUrl.create("https://example.com/${UUID.randomUUID()}", Instant.now().minusSeconds(1))
+
+        assertThrows(ShortUrlExpiredException::class.java) {
+            redirectShortUrl.redirect(created.hash)
+        }
+    }
+
+    @Test
+    fun `short URL with future expiration can be redirected`() {
+        val target = "https://example.com/${UUID.randomUUID()}"
+        val created = createShortUrl.create(target, Instant.now().plusSeconds(60))
+
+        assertEquals(target, redirectShortUrl.redirect(created.hash).target)
     }
 
     private fun <T> runConcurrently(

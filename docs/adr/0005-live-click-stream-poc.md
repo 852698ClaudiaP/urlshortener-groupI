@@ -1,4 +1,4 @@
-# ADR 0004: Live Click Stream Proof of Concept via Server-Sent Events
+# ADR 0005: Live Click Stream Proof of Concept via Server-Sent Events
 
 - **Status:** Accepted
 - **Date:** 2026-10-23
