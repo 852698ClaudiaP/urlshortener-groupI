@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+bin/
+
+# Kotlin / JVM
+.kotlin/
+
+# IDE & Editor
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Local group identity (never commit)
+TEAM.md
