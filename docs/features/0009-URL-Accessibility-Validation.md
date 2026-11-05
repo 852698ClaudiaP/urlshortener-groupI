@@ -24,12 +24,15 @@ ProblemDetail; Bean Validation @URL; circuit breaker [13] for Level 2+.
 
 ## Later (after the 2 October agreement)
 
-- **ADR:** none | docs/adr/NNNN-….md *(by when a choice locks a module, the broker, or a library)*
+- **ADR:** [docs/adr/0006-url-accessibility-validation.md](../adr/0006-url-accessibility-validation.md)
 
 ### Acceptance criteria
 
-- [ ] …
-- [ ] …
+- [ ] **AC1: URL accesible (2xx / 3xx)**: Al enviar POST /api/link con una URL que responde con código HTTP 2xx o 3xx, el enlace se crea correctamente devolviendo HTTP 201 Created con el cuerpo JSON esperado y la cabecera Location.
+- [ ] **AC2: URL inaccesible (4xx / 5xx)**: Si la URL devuelve un código de error de cliente o servidor (4xx o 5xx), la creación es rechazada con HTTP 400 Bad Request y un cuerpo RFC 9457 ProblemDetail describiendo que la URL no es alcanzable.
+- [ ] **AC3: Host inexistente o timeout de conexión**: Si el dominio no resuelve por DNS o la conexión excede el tiempo de espera configurado (timeout de 2 s), se rechaza con HTTP 400 Bad Request y cuerpo ProblemDetail.
+- [ ] **AC4: Fallback de HEAD a GET**: Si el servidor remoto rechaza el método HEAD con 405 Method Not Allowed, el validador ejecuta un fallback automático realizando una petición GET para verificar la accesibilidad.
+- [ ] **AC5: Formato sintáctico inválido**: Si la URL no es válida sintácticamente o carece de esquema http/https, se rechaza con HTTP 400 Bad Request y ProblemDetail antes de emitir cualquier petición de red.
 
 ### Scale evidence
 
