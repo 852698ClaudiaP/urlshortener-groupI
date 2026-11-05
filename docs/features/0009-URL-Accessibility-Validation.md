@@ -28,11 +28,11 @@ ProblemDetail; Bean Validation @URL; circuit breaker [13] for Level 2+.
 
 ### Acceptance criteria
 
-- [ ] **AC1: URL accesible (2xx / 3xx)**: Al enviar POST /api/link con una URL que responde con código HTTP 2xx o 3xx, el enlace se crea correctamente devolviendo HTTP 201 Created con el cuerpo JSON esperado y la cabecera Location.
-- [ ] **AC2: URL inaccesible (4xx / 5xx)**: Si la URL devuelve un código de error de cliente o servidor (4xx o 5xx), la creación es rechazada con HTTP 400 Bad Request y un cuerpo RFC 9457 ProblemDetail describiendo que la URL no es alcanzable.
-- [ ] **AC3: Host inexistente o timeout de conexión**: Si el dominio no resuelve por DNS o la conexión excede el tiempo de espera configurado (timeout de 2 s), se rechaza con HTTP 400 Bad Request y cuerpo ProblemDetail.
-- [ ] **AC4: Fallback de HEAD a GET**: Si el servidor remoto rechaza el método HEAD con 405 Method Not Allowed, el validador ejecuta un fallback automático realizando una petición GET para verificar la accesibilidad.
-- [ ] **AC5: Formato sintáctico inválido**: Si la URL no es válida sintácticamente o carece de esquema http/https, se rechaza con HTTP 400 Bad Request y ProblemDetail antes de emitir cualquier petición de red.
+- [ ] **AC1: Accessible URL (2xx / 3xx)**: When issuing POST /api/link with a target URL that responds with an HTTP status code in the 2xx or 3xx range, the short link is created successfully returning HTTP 201 Created with the expected JSON payload and Location header.
+- [ ] **AC2: Unreachable / dead URL (4xx / 5xx)**: If the target URL returns a client or server error code (4xx or 5xx), link creation is rejected with HTTP 400 Bad Request and an RFC 9457 ProblemDetail body stating that the target URL is not reachable.
+- [ ] **AC3: Non-existent host or connection timeout**: If the domain cannot be resolved via DNS or the connection exceeds the configured timeout (2 seconds), the request is rejected with HTTP 400 Bad Request and an RFC 9457 ProblemDetail body.
+- [ ] **AC4: HEAD to GET fallback**: If the remote server rejects the HEAD method with 405 Method Not Allowed, the validator automatically performs a fallback GET request to verify reachability.
+- [ ] **AC5: Invalid URL syntax**: If the provided URL is malformed or lacks an http/https scheme, it is immediately rejected with HTTP 400 Bad Request and an RFC 9457 ProblemDetail body before any network request is issued.
 
 ### Scale evidence
 
