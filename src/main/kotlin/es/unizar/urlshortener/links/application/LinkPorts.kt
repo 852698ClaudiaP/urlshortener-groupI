@@ -14,8 +14,10 @@ interface ShortUrlStore {
 }
 
 @SecondaryPort
-fun interface UrlValidator {
-    fun isValid(url: String): Boolean
+interface UrlValidator {
+    fun validate(url: String)
+
+    fun isValid(url: String): Boolean = runCatching { validate(url) }.isSuccess
 }
 
 @SecondaryPort
@@ -35,6 +37,12 @@ data class Redirection(
 class InvalidUrlException(
     url: String,
 ) : RuntimeException("[$url] is not a supported URL")
+
+class UrlNotReachableException(
+    val url: String,
+    val reason: String = "unreachable",
+    cause: Throwable? = null,
+) : RuntimeException("[$url] is not reachable: $reason", cause)
 
 class LinkNotFoundException(
     hash: String,

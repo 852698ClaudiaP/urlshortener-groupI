@@ -23,9 +23,7 @@ class LinkService(
     ): CreatedShortUrl {
         val trimmed = url.trim()
         require(trimmed.isNotEmpty()) { "url must not be blank" }
-        if (!validator.isValid(trimmed)) {
-            throw InvalidUrlException(trimmed)
-        }
+        validator.validate(trimmed)
         val stored = store.insert(ShortUrl(hash = codes.next(), target = trimmed, expiresAt = expiresAt))
         events.publishEvent(ShortUrlCreatedEvent(hash = stored.hash, target = stored.target))
         return CreatedShortUrl(hash = stored.hash, target = stored.target)
