@@ -17,7 +17,8 @@ import org.apache.commons.validator.routines.UrlValidator as ApacheUrlValidator
 @Component
 class HttpUrlAccessibilityValidator(
     private val httpClient: HttpClient =
-        HttpClient.newBuilder()
+        HttpClient
+            .newBuilder()
             .connectTimeout(CONNECT_TIMEOUT)
             .followRedirects(HttpClient.Redirect.NORMAL)
             .build(),
@@ -36,10 +37,12 @@ class HttpUrlAccessibilityValidator(
     override fun isValid(url: String): Boolean = runCatching { validate(url) }.isSuccess
 
     private fun parseValidUri(url: String): URI? {
-        if (!syntaxValidator.isValid(url)) return null
-        val uri = runCatching { URI.create(url) }.getOrNull() ?: return null
-        if (uri.host.isNullOrBlank()) return null
-        return uri
+        if (!syntaxValidator.isValid(url)) {
+            return null
+        }
+        return runCatching { URI.create(url) }
+            .getOrNull()
+            ?.takeIf { !it.host.isNullOrBlank() }
     }
 
     private fun checkReachability(
@@ -52,8 +55,8 @@ class HttpUrlAccessibilityValidator(
         }
     }
 
-    private fun executeReachabilityProbe(uri: URI): ProbeResult {
-        return try {
+    private fun executeReachabilityProbe(uri: URI): ProbeResult =
+        try {
             val headStatus = sendProbe(uri, "HEAD")
             if (headStatus in SUCCESS_RANGE) {
                 ProbeResult.SUCCESS
@@ -77,14 +80,14 @@ class HttpUrlAccessibilityValidator(
             Thread.currentThread().interrupt()
             ProbeResult.failure("Request interrupted", e)
         }
-    }
 
     private fun sendProbe(
         uri: URI,
         method: String,
     ): Int {
         val request =
-            HttpRequest.newBuilder(uri)
+            HttpRequest
+                .newBuilder(uri)
                 .method(method, HttpRequest.BodyPublishers.noBody())
                 .timeout(REQUEST_TIMEOUT)
                 .header("User-Agent", USER_AGENT)
@@ -92,8 +95,7 @@ class HttpUrlAccessibilityValidator(
         return httpClient.send(request, HttpResponse.BodyHandlers.discarding()).statusCode()
     }
 
-    private fun shouldFallbackToGet(statusCode: Int): Boolean =
-        statusCode == 405 || statusCode == 501 || statusCode == 403
+    private fun shouldFallbackToGet(statusCode: Int): Boolean = statusCode == 405 || statusCode == 501 || statusCode == 403
 
     private fun isReservedTestHost(host: String): Boolean =
         host == "example.com" ||

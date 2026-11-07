@@ -37,6 +37,7 @@ class UrlAccessibilityValidationTests {
     @Test
     fun `AC1 - accessible URL with 2xx returns 201 Created and location header`() {
         val mockClient = mock(HttpClient::class.java)
+
         @Suppress("UNCHECKED_CAST")
         val mockResponse = mock(HttpResponse::class.java) as HttpResponse<Void>
         `when`(mockResponse.statusCode()).thenReturn(200)
@@ -51,6 +52,7 @@ class UrlAccessibilityValidationTests {
     @Test
     fun `AC1 - accessible URL with 3xx redirection is accepted`() {
         val mockClient = mock(HttpClient::class.java)
+
         @Suppress("UNCHECKED_CAST")
         val mockResponse = mock(HttpResponse::class.java) as HttpResponse<Void>
         `when`(mockResponse.statusCode()).thenReturn(301)
@@ -64,6 +66,7 @@ class UrlAccessibilityValidationTests {
     @Test
     fun `AC2 - dead URL returning 404 throws UrlNotReachableException`() {
         val mockClient = mock(HttpClient::class.java)
+
         @Suppress("UNCHECKED_CAST")
         val mockResponse = mock(HttpResponse::class.java) as HttpResponse<Void>
         `when`(mockResponse.statusCode()).thenReturn(404)
@@ -82,6 +85,7 @@ class UrlAccessibilityValidationTests {
     @Test
     fun `AC2 - server error returning 500 throws UrlNotReachableException`() {
         val mockClient = mock(HttpClient::class.java)
+
         @Suppress("UNCHECKED_CAST")
         val mockResponse = mock(HttpResponse::class.java) as HttpResponse<Void>
         `when`(mockResponse.statusCode()).thenReturn(500)
@@ -141,8 +145,10 @@ class UrlAccessibilityValidationTests {
     @Test
     fun `AC4 - HEAD method 405 falls back to GET successfully`() {
         val mockClient = mock(HttpClient::class.java)
+
         @Suppress("UNCHECKED_CAST")
         val headResponse = mock(HttpResponse::class.java) as HttpResponse<Void>
+
         @Suppress("UNCHECKED_CAST")
         val getResponse = mock(HttpResponse::class.java) as HttpResponse<Void>
         `when`(headResponse.statusCode()).thenReturn(405)
@@ -159,8 +165,10 @@ class UrlAccessibilityValidationTests {
     @Test
     fun `AC4 - HEAD method 405 falls back to GET and fails if GET returns 404`() {
         val mockClient = mock(HttpClient::class.java)
+
         @Suppress("UNCHECKED_CAST")
         val headResponse = mock(HttpResponse::class.java) as HttpResponse<Void>
+
         @Suppress("UNCHECKED_CAST")
         val getResponse = mock(HttpResponse::class.java) as HttpResponse<Void>
         `when`(headResponse.statusCode()).thenReturn(405)
