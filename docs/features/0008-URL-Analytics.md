@@ -26,12 +26,15 @@ storage is a GDPR liability [11].
 
 ## Later (after the 2 October agreement)
 
-- **ADR:** none | docs/adr/NNNN-….md *(by when a choice locks a module, the broker, or a library)*
+- **ADR:** [docs/adr/0007-url-analytics.md](../adr/0007-url-analytics.md)
 
 ### Acceptance criteria
 
-- [ ] …
-- [ ] …
+- [ ] **AC1: Initial stats for newly created short URL**: `GET /api/stats/{hash}` for an existing short URL with no redirects responds `200 OK`, and the JSON body contains `"totalClicks": 0`, `"uniqueVisitors": 0`, `"lastClick": null`, and `"recentClickRate": 0.0`.
+- [ ] **AC2: Updated stats after redirect**: After a redirect `GET /{hash}` is performed, `GET /api/stats/{hash}` responds `200 OK`, and the JSON body contains `"totalClicks": 1`, `"uniqueVisitors": 1`, and a valid ISO-8601 `"lastClick"` timestamp.
+- [ ] **AC3: Unique visitor deduplication**: When multiple redirects `GET /{hash}` occur from the same client IP or visitor token, `GET /api/stats/{hash}` responds `200 OK` with `"totalClicks"` incremented accordingly while `"uniqueVisitors"` remains `1`.
+- [ ] **AC4: Time-window click rate**: `GET /api/stats/{hash}` responds `200 OK` including a time-window aggregation metric (such as click count or rate over the last rolling window) updated by the analytics read model.
+- [ ] **AC5: Non-existent hash (Error case)**: `GET /api/stats/{hash}` with an unknown or non-existent hash responds `404 Not Found` with an RFC 9457 `ProblemDetail` body containing `status: 404` and `title: "Stats Not Found"`.
 
 ### Scale evidence
 
