@@ -55,7 +55,7 @@ We will implement URL accessibility validation inside the `links` module with th
 
 ## Evidence (defence)
 
-- [ ] Validator implementation in `es.unizar.urlshortener.links.adapters.validation`
-- [ ] RFC 9457 error handler in `es.unizar.urlshortener.links.adapters.web.LinkController`
-- [ ] Unit & integration tests in `es.unizar.urlshortener.links.UrlAccessibilityValidationTests`
-- [ ] Automated verification: `./gradlew check` (ktlint + tests + JaCoCo coverage >= 60%)
+- [x] Validator implementation in `es.unizar.urlshortener.links.adapters.validation`
+- [x] RFC 9457 error handler in `es.unizar.urlshortener.links.adapters.web.LinkController`
+- [x] Unit & integration tests in `es.unizar.urlshortener.links.UrlAccessibilityValidationTests`
+- [x] Automated verification: `./gradlew check` (ktlint + tests + JaCoCo coverage >= 60%)
