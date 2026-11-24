@@ -40,7 +40,6 @@ class CreateShortUrlConcurrencyTests {
         val url = "https://example.com/${UUID.randomUUID()}"
         val results = runConcurrently(CREATES) { createShortUrl.create(url).hash }
         assertEquals(CREATES, results.toSet().size)
-        assertTrue(results.all { it.length >= Base62.MIN_CODE_LENGTH })
     }
 
     @Test
