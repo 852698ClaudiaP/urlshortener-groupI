@@ -21,7 +21,7 @@ for Level 2; Modulith outbox for Level 4.
 
 ## Later (after the 2 October agreement)
 
-- **ADR:** none | docs/adr/NNNN-….md *(by when a choice locks a module, the broker, or a library)*
+- **ADR:** [docs/adr/0007-CSV-upload.md](../adr/-CSV-upload.md)
 
 ### Acceptance criteria
 

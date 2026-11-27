@@ -46,6 +46,9 @@ dependencies {
     runtimeOnly(libs.hsqldb)
     runtimeOnly(libs.postgresql)
 
+    // CSV
+    implementation(libs.commons.csv)
+
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.starter.webmvc.test)
     testImplementation(libs.modulith.starter.test)
