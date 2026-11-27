@@ -8,6 +8,7 @@ archunit = "1.5.0"
 jmolecules = "2025.0.2"
 detekt = "2.0.0-alpha.6"
 ktlint = "12.2.0"
+commonsCsv = "1.14.1"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -41,3 +42,4 @@ testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgr
 jmolecules-bom = { module = "org.jmolecules:jmolecules-bom", version.ref = "jmolecules" }
 jmolecules-hexagonal = { module = "org.jmolecules:jmolecules-hexagonal-architecture" }
 jmolecules-archunit = { module = "org.jmolecules.integrations:jmolecules-archunit" }
+commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "commonsCsv" }
