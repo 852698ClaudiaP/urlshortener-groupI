@@ -11,6 +11,10 @@ interface ShortUrlStore {
     fun insert(shortUrl: ShortUrl): ShortUrl
 
     fun findByHash(hash: String): Optional<ShortUrl>
+
+    fun findExpiredBefore(cutoff: Instant): List<ShortUrl>
+
+    fun deleteByHash(hash: String): Unit
 }
 
 @SecondaryPort
@@ -65,4 +69,9 @@ fun interface CreateShortUrl {
 @PrimaryPort
 fun interface RedirectShortUrl {
     fun redirect(hash: String): Redirection
+}
+
+@PrimaryPort
+fun interface DeleteExpiredShortUrls {
+    fun delete(cutoff: Instant)
 }
